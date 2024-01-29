@@ -85,12 +85,12 @@ search.addEventListener('click', () => {
                      var descricao = 'Algumas Nuvens';
                     break;
 
-                case 'Haze':
-                    var descricao = '';
+                case 'Clear Sky':
+                    var descricao = 'Céu Limpo';
                     break;
 
-                case 'Thunderstorm':
-                   var  descricao = '';
+                case 'Overcast Clouds':
+                   var  descricao = 'Nublado';
                     break;
 
                 default:
