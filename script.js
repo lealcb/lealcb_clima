@@ -81,8 +81,8 @@ search.addEventListener('click', () => {
                     var descricao = 'Chuva pesada';
                     break;
 
-                case 'rain':
-                     var descricao = '';
+                case 'Few Clouds':
+                     var descricao = 'Algumas Nuvens';
                     break;
 
                 case 'Haze':
