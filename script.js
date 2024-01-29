@@ -7,7 +7,7 @@ const error404 = document.querySelector('.nao-encontrado');
 
 search.addEventListener('click', () => {
 
-    const APIKey = atob('ZjBhZjdjZmQ3MjA3MzdmNzczMDcwODM1OTdhNWM3YjQ=');
+    const APIKey = atob('f0af7cfd720737f77307083597a5c7b4');
     const city = document.querySelector('.search-box input').value;
 
     if (city === '')
