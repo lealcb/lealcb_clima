@@ -82,15 +82,15 @@ function fetchWeatherData() {
                         var descricao = 'Chuva pesada';
                         break;
 
-                    case 'Clear Sky':
+                    case 'clear sky':
                         var descricao = 'Céu Limpo';
                         break;
 
-                    case 'Overcast Clouds':
+                    case 'overcast clouds':
                         var descricao = 'Nublado';
                         break;
 
-                    case 'Few Clouds':
+                    case 'few clouds':
                     var  descricao = 'Algumas Nuvens';
                         break;
 
