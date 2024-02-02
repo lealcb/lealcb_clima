@@ -137,56 +137,54 @@
             enumerable: false
         })
 
-        // Build GUI
+
         const setupGUI = () => {
             settings.gui = new lil.GUI()
-            // Configs
-            const configFolder = settings.gui.addFolder('Config')
+    
+            const configFolder = settings.gui.addFolder('Configuracao')
             configFolder.add(settings, 'reset').name('Reset')
-            configFolder.add(settings, 'randomRules').name('Random Rules')
-            configFolder.add(settings, 'symmetricRules').name('Symmetric Rules')
+            configFolder.add(settings, 'randomRules').name('Aleatorio')
+            configFolder.add(settings, 'symmetricRules').name('Simetria')
             configFolder.add(settings, 'numColors', 1, 7, 1).name('Number of Colors')
                 .listen().onFinishChange(v => {
                     setNumberOfColors();
                     startRandom();
                 })
-            configFolder.add(settings, 'seed').name('Seed').listen().onFinishChange(v => {
+            configFolder.add(settings, 'seed').name('Semente').listen().onFinishChange(v => {
                 startRandom();
             })
-            configFolder.add(settings, 'fps').name('FPS - (Live)').listen().disable()
-            configFolder.add(settings.atoms, 'count', 1, 1000, 1).name('Atoms per-color').listen().onFinishChange(v => {
+            configFolder.add(settings, 'fps').name('Contador FPS').listen().disable()
+            configFolder.add(settings.atoms, 'count', 1, 1000, 1).name('Atomos por cor').listen().onFinishChange(v => {
                 randomAtoms(v, true)
             })
-            configFolder.add(settings, 'time_scale', 0.1, 5, 0.01).name('Time Scale').listen()
-            configFolder.add(settings, 'viscosity', 0.1, 2, 0.1).name('Viscosity').listen()
+            configFolder.add(settings, 'time_scale', 0.1, 5, 0.01).name('Escala de tempo').listen()
+            configFolder.add(settings, 'viscosity', 0.1, 2, 0.1).name('Viscosidade').listen()
 
-            configFolder.add(settings, 'gravity', 0., 1., 0.05).name('Gravity').listen()
-            configFolder.add(settings, 'pulseDuration', 1, 100, 1).name('Click Pulse Duration').listen()
+            configFolder.add(settings, 'gravity', 0., 1., 0.05).name('Gravidade').listen()
+            configFolder.add(settings, 'pulseDuration', 1, 100, 1).name('Pulsação').listen()
 
-            configFolder.add(settings, 'wallRepel', 0, 100, 1).name('Wall Repel').listen()
-            configFolder.add(settings, 'explore').name('Random Exploration').listen()
-            // desenho
+            configFolder.add(settings, 'wallRepel', 0, 100, 1).name('Parede').listen()
+
             const desenhoFolder = settings.gui.addFolder('desenho')
-            desenhoFolder.add(settings.atoms, 'radius', 1, 10, 0.5).name('Radius').listen()
-            desenhoFolder.add(settings.desenho, 'circle').name('Circle Shape').listen()
-            desenhoFolder.add(settings.desenho, 'clusters').name('Track Clusters').listen()
-            desenhoFolder.add(settings.desenho, 'lines').name('Draw Lines').listen()
-            desenhoFolder.addColor(settings.desenho, 'background_color').name('Background Color').listen()
-            // Export
-            const exportFolder = settings.gui.addFolder('Export')
-            exportFolder.add(settings.export, 'image').name('Image')
-            exportFolder.add(settings.export, 'video').name('Video: Start / stop')
-            // Colors
+            desenhoFolder.add(settings.atoms, 'radius', 1, 10, 0.5).name('Tamanho').listen()
+            desenhoFolder.add(settings.desenho, 'circle').name('Ciculo').listen()
+            desenhoFolder.add(settings.desenho, 'clusters').name('Seguir os circulos').listen()
+            desenhoFolder.add(settings.desenho, 'lines').name('Linha').listen()
+            desenhoFolder.addColor(settings.desenho, 'background_color').name('Cor de fundo').listen()
+      
+            const exportFolder = settings.gui.addFolder('Exportar')
+            exportFolder.add(settings.export, 'image').name('Imagem')
+
             for (const atomColor of settings.colors) {
                 const colorFolder =
-                    settings.gui.addFolder(`Rules: <font color=\'${atomColor}\'>${atomColor.capitalise()}</font>`)
+                    settings.gui.addFolder(`Regras: <font color=\'${atomColor}\'>${atomColor.capitalise()}</font>`)
                 for (const ruleColor of settings.colors) {
                     colorFolder.add(settings.rules[atomColor], ruleColor, -1, 1, 0.001)
                          .name(`<-> <font color=\'${ruleColor}\'>${ruleColor.capitalise()}</font>`)
                          .listen().onFinishChange(v => { flattenRules() }
                     )
                 }
-                colorFolder.add(settings.radii, atomColor, 1, maxRadius, 5).name('Radius')
+                colorFolder.add(settings.radii, atomColor, 1, maxRadius, 5).name('Tamanho')
                     .listen().onFinishChange(v => { flattenRules() }
                 )
             }
@@ -195,7 +193,7 @@
         }
 
 
-        // Seedable 'decent' random generator
+
         var local_seed = settings.seed;
         function mulberry32() {
             let t = local_seed += 0x6D2B79F5;
@@ -207,10 +205,10 @@
         function loadSeedFromUrl() {
             let hash = window.location.hash;
             if (hash != undefined && hash[0] == '#') {
-                let param = Number(hash.substr(1)); // remove the leading '#'
+                let param = Number(hash.substr(1));
                 if (isFinite(param)) {
                     settings.seed = param;
-                    console.log("Using seed " + settings.seed);
+                    console.log("Usar Semente " + settings.seed);
                 }
             }
         }
@@ -218,9 +216,9 @@
         function randomRules() {
             if (!isFinite(settings.seed)) settings.seed = 0xcafecafe;
             window.location.hash = "#" + settings.seed;
-            document.title = "Life #" + settings.seed;
+            document.title = "Vida #" + settings.seed;
             local_seed = settings.seed;
-            console.log("Seed=" + local_seed);
+            console.log("Semente=" + local_seed);
             for (const i of settings.colors) {
                 settings.rules[i] = {};
                 for (const j of settings.colors) {
@@ -261,7 +259,6 @@
             canvas.height = window.innerHeight * 0.9;
         }
 
-        // Initiate Random locations for Atoms ( used when atoms created )
         function randomX() {
             return mulberry32() * (canvas.width - 100) + 50;
         };
@@ -270,13 +267,7 @@
             return mulberry32() * (canvas.height - 100) + 50;
         };
 
-        /* Create an Atom - Use matrices for x4/5 performance improvement
-        atom[0] = x
-        atom[1] = y
-        atom[2] = ax
-        atom[3] = ay
-        atom[4] = color (index)
-        */
+
         const create = (number, color) => {
             for (let i = 0; i < number; i++) {
                 atoms.push([randomX(), randomY(), 0, 0, color])
@@ -304,13 +295,13 @@
             }
         }
 
-        // Run Application
-        loadSeedFromUrl()
+
+  
 
         // Canvas
         const canvas = document.getElementById('canvas');
         const m = canvas.getContext("2d");
-        // Draw a square
+
         const drawSquare = (x, y, color, radius) => {
             m.fillStyle = color;
             m.fillRect(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -325,7 +316,7 @@
             fill ? m.fill() : m.stroke()
         };
 
-        // Draw a line between two atoms
+
         function drawLineBetweenAtoms(ax, ay, bx, by, color) {
             m.beginPath();
             m.moveTo(ax, ay);
@@ -335,9 +326,6 @@
             m.stroke();
         };
 
-        // [position-x, position-y, radius, color]
-        //    /* tmp accumulators: */
-        //  {count, accum-x, accum-y, accum-d^2, accum-color}]
         let clusters = [];
         function newCluster() {
             return [randomX(), randomY(), maxRadius, 'white'];
@@ -363,7 +351,7 @@
             return [best, best_d2];
         }
         function moveClusters(accums) {
-            let max_d = 0.;   // record max cluster displacement
+            let max_d = 0.;   
             for (let i = 0; i < clusters.length; ++i) {
                 let c = clusters[i];
                 const a = accums[i];
@@ -384,17 +372,14 @@
                 const a = accums[i];
                 if (a[0] > minClusterSize) {
                     const norm = 1. / a[0];
-                    const new_r = 1.10 * Math.sqrt(a[3] * norm);  // with 10% extra room
-                    c[2] = 0.95 * c[2] + 0.05 * new_r;  // exponential smoothing
-                    // 'average' color
+                    const new_r = 1.10 * Math.sqrt(a[3] * norm);  
+                    c[2] = 0.95 * c[2] + 0.05 * new_r; 
                     c[3] = settings.colors[Math.floor(a[4] * norm + .5)];
                 } else {
-                    c[2] = 0.;   // disable the weak cluster
+                    c[2] = 0.;   
                 }
             }
-            // note: if half of the particles are not within the average
-            // radius of the cluster, we should probably split it in two
-            // along the main axis!
+ 
         }
         function trackClusters() {
             addNewClusters(maxClusters);
@@ -426,7 +411,7 @@
                     drawCircle(c[0], c[1], c[3], c[2], false);
                     ++i;
                 } else {
-                    // remove cluster by swapping with last
+              
                     const last = clusters.pop();
                     if (i < clusters.length) clusters[i] = last;
                 }
@@ -558,7 +543,7 @@
         setupKeys()
         setupGUI()
 
-        console.log('settings', settings)
+        console.log('Cofigurações', settings)
 
         // Update Frames
         var lastT = Date.now();
